@@ -12,12 +12,12 @@ The BackingTrackPlayer can be controlled by the buttons on the app or a MIDI foo
 
 The BackingTrackPlayer responds to the following MIDI messages:
 
-Action | CC# | CC Value
--------|-----|---------
-Play | 1 | 00
-Stop | 1 | 127
-Volume|3| 0-127
-Speed|4|1, 2, 3, 4, 5 for speeds  1x, 0.5x, .75x, 1.25x, 1.5x respectively
+| Action | CC# | CC Value                                       |
+|--------|-----|------------------------------------------------|
+| Play   | 1   | 0                                              |
+| Stop   | 1   | 127                                            |
+| Volume | 3   | 0-127                                          |
+| Speed  | 4   | 1, 2, 3 for speeds 1x, 0.8x, 0.9x respectively |
 
 Play and Stop use CC#1 to make it easy to set up a midi toggle switch to stop/start.
 The audio loops by default.
@@ -55,7 +55,7 @@ cp /opt/homebrew/bin/ffmpeg bin/
 
 ```bash
 source .venv/bin/activate
-pyinstaller specs/mac.spec --clean
+pyinstaller specs/mac.spec --clean --distpath dist --workpath build
 ```
 
 The app will be at `dist/Backing Track Player.app`.

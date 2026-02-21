@@ -86,8 +86,8 @@ class MidiMonitorScreen(Screen):
                     action = 'Stop'
             elif msg.control == 3:
                 action = f'Volume: {int(msg.value/127 * 100)}%'
-            elif msg.control == 4 and msg.value in range(1,6):
-                speed_msg = ['', '1x', '0.5x', '.75x', '1.25x', '1.5x']
+            elif msg.control == 4 and msg.value in range(1,4):
+                speed_msg = ['', '1x', '0.8x', '0.9x']
                 action = f'Speed Control {speed_msg[msg.value]}'
         self.rv_list.append({'raw': raw, 'action': action})
         self.ids.rv.scroll_y = 0

@@ -19,11 +19,10 @@ a = Analysis([os.path.join(project_root, 'main.py')],
              noarchive=False)
 
 # Remove unnecessary shared libraries that get pulled in as dependencies
-# The app uses a standalone ffmpeg binary, not ffmpeg shared libs
-# Pillow and OpenSSL are not needed either
+# Keep libs required by the bundled ffmpeg binary (libav*, libsw*, libssl, libcrypto,
+# libvpx, libdav1d, libmp3lame, libopus, libSvtAv1, libx264, libx265)
+# Only exclude image/GUI libs not needed by this app
 exclude_libs = {
-    'libav', 'libsw', 'libx264', 'libx265', 'libvpx', 'libopus',
-    'libmp3lame', 'libSvtAv1', 'libdav1d', 'libcrypto', 'libssl',
     'libavif', 'libwebp', 'libsharpyuv', 'libbrotli', 'libharfbuzz',
     'libtiff', 'libopenjp2', 'liblcms2', 'libXau', 'libxcb',
 }

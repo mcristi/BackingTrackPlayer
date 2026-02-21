@@ -8,6 +8,7 @@ from kivy.utils import platform
 
 from pathlib import Path
 import subprocess
+import sys
 
 Builder.load_string("""
 <PlayScreen>:
@@ -47,8 +48,8 @@ Builder.load_string("""
 
 class PlayScreen(Screen):
     error_msg = 'Invalid File or No File Selected'
-    speeds = ['Speed 0.5x', 'Speed 0.75x', 'Speed 1x', 'Speed 1.25x', 'Speed 1.5x']
-    time_stretched = ['Speed 0.5x', 'Speed 0.75x', 'Speed 1.25x', 'Speed 1.5x']
+    speeds = ['Speed 0.8x', 'Speed 0.9x', 'Speed 1x']
+    time_stretched = ['Speed 0.8x', 'Speed 0.9x']
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -110,10 +111,10 @@ class PlayScreen(Screen):
             self.ids.file.text = self.error_msg
 
     def set_speed(self, value):
-        #  value from midi cc message : 1, 2, 3, 4, 5 for speeds  1x, 0.5x, .75x, 1.25x, 1.5x respectively
-        if value not in [1, 2, 3, 4, 5]:
+        #  value from midi cc message : 1, 2, 3 for speeds 1x, 0.8x, 0.9x respectively
+        if value not in [1, 2, 3]:
             return
-        m_speeds = ['Speed 1x', 'Speed 0.5x', 'Speed 0.75x', 'Speed 1.25x', 'Speed 1.5x']
+        m_speeds = ['Speed 1x', 'Speed 0.8x', 'Speed 0.9x']
         self.ids.speed.text = m_speeds[value - 1]
 
     def time_stretch(self, fn):
@@ -121,12 +122,12 @@ class PlayScreen(Screen):
         app = App.get_running_app()
         speed_dir = Path(app.user_data_dir) / 'speeds'
         speed_dir.mkdir(exist_ok=True)
-        # files are stored with _050, _075, _125, _150 appended to name
+        # files are stored with _080, _090 appended to name
         p = Path(fn)
         stem = p.stem
         suffix = p.suffix
         # files not related to the current track are deleted in on_stop
-        ts_files = {stem + ext + suffix for ext in ['_050', '_075', '_125', '_150']}
+        ts_files = {stem + ext + suffix for ext in ['_080', '_090']}
         disk_files = {f.name for f in speed_dir.glob('*')}
         if ts_files <= disk_files:
             return  # use existing time stretch files
@@ -135,10 +136,13 @@ class PlayScreen(Screen):
 
     def _generate_time_stretch(self, p, sp):
         # p is the full input path, sp is the output path
-        speeds = ['0.50', '0.75', '1.50', '1.25']
+        speeds = ['0.80', '0.90']
         self.time_stretch_processes.clear()
         cf = subprocess.CREATE_NO_WINDOW if platform == 'win' else 0  # no windows with Popen on Win10
-        exe_path = Path(__file__).parent.parent / 'bin' / 'ffmpeg'
+        if getattr(sys, 'frozen', False):
+            exe_path = Path(sys._MEIPASS) / 'bin' / 'ffmpeg'
+        else:
+            exe_path = Path(__file__).parent.parent / 'bin' / 'ffmpeg'
         for i, speed in enumerate(speeds):
             output_path = sp / f"{p.stem}_{speed.replace('.', '')}{p.suffix}"
             cmd = [str(exe_path), '-y', '-i', str(p), '-filter:a', f'atempo={speed}', str(output_path)]
@@ -153,11 +157,9 @@ class PlayScreen(Screen):
         app = App.get_running_app()
         p = str(Path(app.user_data_dir) / Path('speeds') / track_p.stem)
         suffix = track_p.suffix
-        file = {'Speed 0.5x': p + '_050' + suffix,
-                'Speed 0.75x': p + '_075' + suffix,
-                'Speed 1x': self.track_path,
-                'Speed 1.25x': p + '_125' + suffix,
-                'Speed 1.5x': p + '_150' + suffix}
+        file = {'Speed 0.8x': p + '_080' + suffix,
+                'Speed 0.9x': p + '_090' + suffix,
+                'Speed 1x': self.track_path}
         self.stop()
         # disable play button if track not yet generated
         self.track_stretched = file[text]
