@@ -266,7 +266,7 @@ class BackingTrackPlayerApp(App):
             suffix = fn.suffix
             speed_dir = Path(self.user_data_dir) / 'speeds'
             for f in speed_dir.glob('*'):
-                if f.stem[:-4] + suffix != fn.name:
+                if f.is_file() and not f.is_symlink() and f.stem[:-4] + suffix != fn.name:
                     f.unlink()  # remove files not related to current track
 
 
