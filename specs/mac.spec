@@ -14,8 +14,23 @@ a = Analysis([os.path.join(project_root, 'main.py')],
              hiddenimports=['mido.backends.rtmidi'],
              hookspath=[],
              runtime_hooks=[],
-             excludes=['_tkinter', 'Tkinter', 'enchant', 'twisted'],
+             excludes=['_tkinter', 'Tkinter', 'enchant', 'twisted',
+                       'PIL', 'Pillow', 'ssl', '_ssl', 'hashlib'],
              noarchive=False)
+
+# Remove unnecessary shared libraries that get pulled in as dependencies
+# The app uses a standalone ffmpeg binary, not ffmpeg shared libs
+# Pillow and OpenSSL are not needed either
+exclude_libs = {
+    'libav', 'libsw', 'libx264', 'libx265', 'libvpx', 'libopus',
+    'libmp3lame', 'libSvtAv1', 'libdav1d', 'libcrypto', 'libssl',
+    'libavif', 'libwebp', 'libsharpyuv', 'libbrotli', 'libharfbuzz',
+    'libtiff', 'libopenjp2', 'liblcms2', 'libXau', 'libxcb',
+}
+
+a.binaries = [b for b in a.binaries
+              if not any(b[0].startswith(prefix) for prefix in exclude_libs)]
+a.datas = [d for d in a.datas if not d[0].startswith('PIL')]
 
 pyz = PYZ(a.pure, a.zipped_data)
 
@@ -26,7 +41,7 @@ exe = EXE(pyz,
           name=app_name,
           debug=False,
           bootloader_ignore_signals=False,
-          strip=False,
+          strip=True,
           upx=False,
           console=False,
           target_arch='arm64')
@@ -35,7 +50,7 @@ coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
                a.datas,
-               strip=False,
+               strip=True,
                upx=False,
                name=app_name)
 
