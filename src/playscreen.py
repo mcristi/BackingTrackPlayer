@@ -139,7 +139,7 @@ class PlayScreen(Screen):
         speeds = ['0.50', '0.75', '1.50', '1.25']
         self.time_stretch_processes.clear()
         cf = subprocess.CREATE_NO_WINDOW if platform == 'win' else 0  # no windows with Popen on Win10
-        exe_path = Path(__file__).parent / 'ffmpeg'
+        exe_path = Path(__file__).parent.parent / 'bin' / 'ffmpeg'
         for i, speed in enumerate(speeds):
             cmd = f'"{exe_path}" -y -i "{p}" -filter:a atempo={speed} "{sp / p.stem}_{speed.replace(".", "")}{p.suffix}"'
             self.time_stretch_processes[self.time_stretched[i]] = \

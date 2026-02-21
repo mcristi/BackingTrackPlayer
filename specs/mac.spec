@@ -2,27 +2,22 @@
 
 import os
 
-spec_root = os.path.abspath(SPECPATH)
-block_cipher = None
+project_root = os.path.join(os.path.abspath(SPECPATH), '..')
 app_name = 'Backing Track Player'
-mac_icon = '../icons8-refresh-512.icns'
+mac_icon = os.path.join(project_root, 'assets', 'icon.icns')
 
 
-a = Analysis(['../main.py'],
-             pathex=[spec_root],
-             binaries=[],
-             datas=[('../ffmpeg', '.'), ('../*.png', '.')],
-             hiddenimports=[],
+a = Analysis([os.path.join(project_root, 'main.py')],
+             pathex=[project_root],
+             binaries=[(os.path.join(project_root, 'bin', 'ffmpeg'), 'bin')],
+             datas=[(os.path.join(project_root, 'assets', '*.png'), '.')],
+             hiddenimports=['mido.backends.rtmidi'],
              hookspath=[],
              runtime_hooks=[],
              excludes=['_tkinter', 'Tkinter', 'enchant', 'twisted'],
-             win_no_prefer_redirects=False,
-             win_private_assemblies=False,
-             cipher=block_cipher,
              noarchive=False)
 
-pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
+pyz = PYZ(a.pure, a.zipped_data)
 
 exe = EXE(pyz,
           a.scripts,
@@ -33,7 +28,8 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=False,
-          console=False)
+          console=False,
+          target_arch='arm64')
 
 coll = COLLECT(exe,
                a.binaries,
@@ -46,4 +42,4 @@ coll = COLLECT(exe,
 app = BUNDLE(coll,
              name=app_name + '.app',
              icon=mac_icon,
-             bundle_identifier=None)
+             bundle_identifier='com.backingtrackplayer.app')

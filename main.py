@@ -1,4 +1,4 @@
-from configstartup import window_width, window_top, window_left, window_height
+from src.configstartup import window_width, window_top, window_left, window_height
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -7,11 +7,11 @@ from kivy.utils import platform
 from kivy.metrics import Metrics
 from kivy.properties import ListProperty
 
-from midi_control import MidiControl
+from src.midi_control import MidiControl
 from pathlib import Path
 import functools
-import playscreen
-import monitorscreen
+import src.playscreen
+import src.monitorscreen
 
 
 kv = """
@@ -162,7 +162,7 @@ class BackingTrackPlayerApp(App):
         self.recent_track_paths = []  # holds full path to the track
 
     def build(self):
-        self.title = 'Backing Track Player V1.11'
+        self.title = 'Backing Track Player v1.2'
         # 1.1 added recent track list
         # 1.11 improved responsiveness of recent tracks button
         self.use_kivy_settings = False

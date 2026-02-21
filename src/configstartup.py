@@ -47,8 +47,8 @@ else:
     Config.set('graphics', 'left', window_left)
 
 if platform == 'macosx':
-    Config.set('kivy', 'window_icon', 'icons8-refresh-512.png')
+    Config.set('kivy', 'window_icon', 'assets/icon-512.png')
 else:
-    Config.set('kivy', 'window_icon', 'icons8-refresh-64.png')  # Windows uses a small png
+    Config.set('kivy', 'window_icon', 'assets/icon-64.png')  # Windows uses a small png
 Config.set('kivy', 'exit_on_escape', 0)
 Config.set('input', 'mouse', 'mouse,disable_multitouch')

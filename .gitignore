@@ -1,2 +1,6 @@
-/ffmpeg.exe
-/ffmpeg
+/bin
+/dist
+/build
+.venv
+.claude
+.idea

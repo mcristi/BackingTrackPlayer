@@ -3,24 +3,20 @@
 import os
 from kivy_deps import sdl2, glew
 
-spec_root = os.path.abspath(SPECPATH)
-block_cipher = None
+project_root = os.path.join(os.path.abspath(SPECPATH), '..')
 app_name = 'Backing Track Player'
-win_icon = '../icons8_refresh_64_icon.ico'
+win_icon = os.path.join(project_root, 'assets', 'icon.ico')
 
-a = Analysis(['../main.py'],
-             pathex=[spec_root],
-             datas=[('../ffmpeg.exe', '.'), ('../*.png', '.')],
-             hiddenimports=[],
+a = Analysis([os.path.join(project_root, 'main.py')],
+             pathex=[project_root],
+             binaries=[(os.path.join(project_root, 'bin', 'ffmpeg.exe'), 'bin')],
+             datas=[(os.path.join(project_root, 'assets', '*.png'), '.')],
+             hiddenimports=['mido.backends.rtmidi'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
-             win_no_prefer_redirects=False,
-             win_private_assemblies=False,
-             cipher=block_cipher,
              noarchive=False)
-pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
+pyz = PYZ(a.pure, a.zipped_data)
 exe = EXE(pyz,
           a.scripts,
           [],
@@ -40,4 +36,3 @@ coll = COLLECT(exe,
                strip=False,
                upx=False,
                name=app_name)
-

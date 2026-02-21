@@ -1,8 +1,6 @@
 # BackingTrackPlayer
 A simple midi controlled audio player designed for playing backing tracks for practice
 
-Release builds for Windows10 and Mac on Release Page: https://github.com/ElliotGarbus/BackingTrackPlayer/releases
-
 **Directions:**
 
 Drag the backing track file you would like to play onto the app. The file name will be displayed in the center.
@@ -25,3 +23,39 @@ Play and Stop use CC#1 to make it easy to set up a midi toggle switch to stop/st
 The audio loops by default.
 
 The app uses kivy for the UI, mido for MIDI, and ffmpeg for time-stretching the audio.
+
+## Building from source (macOS Apple Silicon)
+
+### Prerequisites
+
+Install Python 3.12 and ffmpeg via Homebrew:
+
+```bash
+brew install python@3.12 ffmpeg
+```
+
+### Setup
+
+Create a virtual environment and install dependencies:
+
+```bash
+/opt/homebrew/bin/python3.12 -m venv .venv
+source .venv/bin/activate
+pip install kivy mido python-rtmidi pyinstaller
+```
+
+Copy the Homebrew ffmpeg binary into the `bin/` folder (it is not included in the repo):
+
+```bash
+mkdir -p bin
+cp /opt/homebrew/bin/ffmpeg bin/
+```
+
+### Build the app bundle
+
+```bash
+source .venv/bin/activate
+pyinstaller specs/mac.spec --clean
+```
+
+The app will be at `dist/Backing Track Player.app`.
