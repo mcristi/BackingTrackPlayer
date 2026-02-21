@@ -78,6 +78,7 @@ class PlayScreen(Screen):
             self.track_path = path
             self.ids.file.text = Path(path).stem
             self.track.loop = True
+            self.track.volume = 0.25
             self.time_stretch(path)
 
     def play(self):
@@ -186,3 +187,4 @@ class PlayScreen(Screen):
             self.ids.file.text = self.error_msg
         else:
             self.track.loop = True
+            self.track.volume = 0.25
