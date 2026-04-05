@@ -46,9 +46,9 @@ class MidiControl:
                     app.root.ids.sm.get_screen('midi_monitor').add_line(msg)
                 if msg.type == 'control_change' and msg.channel == self.midi_channel:
                     if msg.control == 1:  # play or stop
-                        if msg.value == 0:
+                        if msg.value == 127:
                             p.play()
-                        elif msg.value == 127:
+                        elif msg.value == 0:
                             p.stop()
                     elif msg.control == 3:  # Adjust playback volume
                         p.set_volume(msg.value)
